@@ -24,17 +24,19 @@ User -- --status --> Job List CLI -- read --> data/jobs.json
 | Job List CLI | `data/jobs.json` | `read` | `load_jobs` |
 | Job List CLI | User | `tab-separated result` | `main` |
 
-## Track A: 公式 `@drawio/mcp`
+## Track A: hosted draw.io MCP（推奨）
 
-MCP Servers で `drawio` が Connected、tool が `open_drawio_mermaid` であることを確認します。5分以上かかる場合は Track B へ切り替えます。
+MCP Servers で `drawio` が `Connected`、tool に `create_diagram` があることを確認します。
 
 ```text
-#File app.py #File data/jobs.json 現行実装だけを根拠に Mermaid flowchart LR を作り、drawio MCP の open_drawio_mermaid で開いてください。要素は User、Job List CLI、data/jobs.json の3つだけです。矢印は --status、read、tab-separated result の3本です。コードや既存ファイルを変更しないでください。
+#File app.py #File data/jobs.json 現行実装だけを根拠に、User、Job List CLI、data/jobs.json の3要素と、--status、read、tab-separated result の3フローを持つ編集可能な draw.io 図を作成してください。推測したサービスは追加しないでください。drawio MCP の create_diagram を使用してください。コードや既存ファイルは変更しないでください。
 ```
 
-権限画面で server=`drawio`、tool=`open_drawio_mermaid` を確認し、1回限りの Allow を選びます。
+権限画面で server=`drawio`、tool=`create_diagram` を確認し、1回限りの `Allow` を選びます。図が chat 内に表示されたら内容を確認し、**Open in draw.io** から editor を開きます。
 
-## Track B: Mermaid fallback
+## Track B: Mermaid 手動 import
+
+hosted MCP server が利用できない場合は、Kiro に次の Mermaid を作成させ、draw.io の Mermaid import へ貼り付けます。
 
 ```mermaid
 flowchart LR
@@ -43,11 +45,11 @@ flowchart LR
     C -->|tab-separated result| U
 ```
 
-これを draw.io の Mermaid import へ貼り付けるか、同じ3要素を手作業で再現します。
+Kiro IDE でローカル `@drawio/mcp` Tool Server を任意設定した場合は、`open_drawio_mermaid` で同じ Mermaid を開くこともできます。ただし、このローカル構成は本ハンズオンの対象外です。
 
 ## 保存と同期
 
-`open_drawio_mermaid` は図を draw.io のブラウザー画面で開きますが、workspace へ自動保存はしません。次の手順で人が保存先を確認します。
+hosted server の **Open in draw.io** またはローカル Tool Server は図を draw.io editor で開きますが、workspace へ自動保存はしません。次の手順で人が保存先を確認します。
 
 ### 1. draw.io から `.drawio` を保存する
 
@@ -137,7 +139,7 @@ Power は、特定の技術を扱うためのツール、作業手順、ベス�
 6. Markdown に相対リンクを追加する
 7. コード、図、Git Diff の整合性を確認する
 
-Power を作る場合も、draw.io を操作する機能そのものは公式 `@drawio/mcp` を利用します。独自 MCP server を作り直す必要はありません。
+Power を作る場合も、draw.io を操作する機能そのものは公式 hosted server または `@drawio/mcp` を利用します。独自 MCP server を作り直す必要はありません。
 
 ### 演習後に試したい場合
 

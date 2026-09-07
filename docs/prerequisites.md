@@ -97,81 +97,72 @@ Kiro IDE 1.x は capability-based permissions を使用します。未許可の�
 
 ## draw.io MCP の事前準備
 
-本演習の Track A は、公式の stdio MCP Tool Server **`@drawio/mcp` v1.5.0** を使用します。これは図をブラウザー版 draw.io で開く方式です。MCP Apps 対応ホスト向けの `https://mcp.draw.io/mcp`（チャット内表示用 App Server）は使用しません。
+本演習の推奨ルートは、Kiro IDE から公式の hosted MCP server **`https://mcp.draw.io/mcp`** へ接続する方法です。この構成は本演習の Windows 環境で動作確認済みです。Node.js や npm のインストールは不要です。
 
-会社管理端末では、Node.js と npm パッケージの利用が組織のソフトウェア・ネットワークポリシーで許可されていることを先に確認してください。
+!!! note "本演習で使う構成"
+    hosted MCP server を使います。ローカルの `@drawio/mcp` Tool Server は、発展的な代替構成として紹介するだけで、必須ではありません。
 
-### 1. Node.js を確認する
+### 1. Kiro の MCP 設定を手動で追加する
 
-`@drawio/mcp` は Node.js 18 以上が必要です。Kiro IDE 内蔵 Terminal で確認します。
+Kiro Agent に MCP 設定の編集を依頼すると、安全ポリシーにより `.kiro/settings/` への書き込みが拒否される場合があります。Agent に権限を迂回させず、人が workspace 設定を手動編集します。
 
-```bash
-node --version
-npm --version
-npx --version
+1. Kiro IDE で `starter-project` を開く
+2. `starter-project/.kiro/settings/mcp.json` を開く。ファイルやフォルダーがなければ作成する
+3. 次を貼り付けて保存する
+
+```json
+{
+  "mcpServers": {
+    "drawio": {
+      "type": "http",
+      "url": "https://mcp.draw.io/mcp",
+      "disabled": false
+    }
+  }
+}
 ```
 
-Node.js 18 以上と npm / npx のバージョンが表示されれば、次へ進みます。
+既存の `mcpServers` がある場合は削除せず、`drawio` entry だけを追加します。
 
-#### macOS で Node.js が見つからない場合
+> `%USERPROFILE%\.kiro\settings\mcp.json` や `~/.kiro/settings/mcp.json` はすべての workspace に影響します。本演習では `starter-project/.kiro/settings/mcp.json` を使います。
 
-推奨: [Node.js 公式ダウンロード](https://nodejs.org/en/download) から LTS 版をインストールします。
+### 2. 接続を確認する
 
-Homebrew の利用が許可され、すでに導入済みの場合は次でも構いません。
+1. MCP Servers パネルで `drawio` を Restart または Refresh する
+2. 反映されない場合は Kiro IDE を完全に終了して起動し直す
+3. 状態が `Connected` になることを確認する
+4. `create_diagram` と `search_shapes` が表示されることを確認する
+5. 初回の権限要求では server 名と tool 名を確認し、workspace に限定した1回限りの `Allow` を選ぶ
 
-```bash
-brew install node@22
-node --version
-npm --version
+### 3. `connection closed` になる場合
+
+まず JSON の `type` が `http`、URL が `https://mcp.draw.io/mcp` であることを確認します。古い stdio 設定のままの場合は、次のような entry が残っていないか確認します。
+
+```json
+"command": "npx"
 ```
 
-#### Windows で Node.js が見つからない場合
+Windows では MCP runner が `npx.cmd` を直接起動できず、`connection closed` になることがあります。本演習では hosted 構成へ切り替えます。
 
-`winget` の利用が許可されている場合は PowerShell で実行します。
+### 4. ローカル Tool Server を使いたい場合（本ハンズオンの対象外）
 
-```powershell
-winget install --exact --id OpenJS.NodeJS.LTS
-node --version
-npm --version
+ローカルで Mermaid、CSV、XML の各 tool を使いたい場合は `@drawio/mcp@1.5.0` を stdio で起動できます。これは任意の発展構成です。
+
+Windows:
+
+```json
+{
+  "mcpServers": {
+    "drawio": {
+      "command": "cmd",
+      "args": ["/c", "npx", "--yes", "@drawio/mcp@1.5.0"],
+      "disabled": false
+    }
+  }
+}
 ```
 
-または [Node.js 公式ダウンロード](https://nodejs.org/en/download) から Windows Installer の LTS 版を使用します。
-
-#### Node.js をインストールした後（macOS / Windows 共通）
-
-Node.js のインストールで更新された `PATH` を Kiro 本体と MCP process に読み込ませる必要があります。**Terminal を閉じる、ウィンドウを Reload するだけでは不十分です。**
-
-1. 編集中のファイルを保存する
-2. Kiro IDE の全ウィンドウを閉じ、**Kiro IDE を完全に終了する**（macOS は **Kiro > Quit Kiro**、Windows は **File > Exit**）
-3. Kiro IDE を起動し直し、`starter-project` を再度開く
-4. 新しい内蔵 Terminal で次を確認する
-
-```bash
-node --version
-npm --version
-npx --version
-```
-
-この完全終了・再起動が終わるまで MCP 設定へ進みません。Node.js 18 以上と npm / npx が確認できてから `@drawio/mcp` を設定します。
-
-### 2. Kiro の MCP 設定を手動で追加する
-
-Kiro Agent に「draw.io MCP を追加して」と依頼すると、Kiro の安全ポリシーにより `~/.kiro/settings/` または `.kiro/settings/` への書き込みが拒否される場合があります。これは異常ではありません。**Agent に権限を迂回させず、人が MCP 設定を手動編集します。**
-
-本演習では他のプロジェクトへ影響しないよう、`starter-project` 内の workspace 設定を推奨します。
-
-#### Windows（参加者向け推奨手順）
-
-1. Kiro IDE で `starter-project` を開きます。
-2. 内蔵 PowerShell Terminal が `starter-project` をカレントフォルダーとしていることを確認します。
-3. 次を実行し、workspace 設定用フォルダーとファイルを開きます。
-
-```powershell
-New-Item -ItemType Directory -Force .kiro\settings
-notepad .kiro\settings\mcp.json
-```
-
-4. ファイルが空の場合は、次をそのまま貼り付けて保存します。
+macOS / Linux:
 
 ```json
 {
@@ -185,80 +176,15 @@ notepad .kiro\settings\mcp.json
 }
 ```
 
-5. すでに `mcpServers` 内に他の server がある場合は、既存設定を削除せず、直前の server の閉じ括弧 `}` の後にカンマを追加して `drawio` エントリだけを追記します。
+ローカル構成では Node.js 18 以上が必要です。Node.js を新しくインストールした場合は Kiro IDE を完全に終了して起動し直します。接続後は `open_drawio_mermaid`、`open_drawio_xml`、`open_drawio_csv` などが表示されます。
 
-```json
-{
-  "mcpServers": {
-    "existing-server": {
-      "command": "example-command",
-      "args": []
-    },
-    "drawio": {
-      "command": "npx",
-      "args": ["--yes", "@drawio/mcp@1.5.0"],
-      "disabled": false
-    }
-  }
-}
-```
+### 5. 代替手段を選ぶ
 
-6. Notepad を閉じ、Kiro IDE へ戻ります。
+- hosted server が `Connected` で `create_diagram` が使える: Track A
+- hosted server が利用できない: Track B の Mermaid 手動 import
+- ローカル Tool Server を試す: 演習後の発展項目
 
-Kiro の MCP Servers パネルから workspace MCP configuration を開ける場合は、PowerShell と Notepad の代わりにその画面で同じ JSON を手動保存しても構いません。
-
-> Windows の注意: `%USERPROFILE%\.kiro\settings\mcp.json` はすべての workspace に適用されるユーザー設定です。本演習では `<starter-project>\.kiro\settings\mcp.json` を使い、影響範囲を限定します。
-
-#### macOS
-
-1. Kiro IDE で `starter-project` を開きます。
-2. MCP Servers パネルから workspace MCP configuration を開くか、内蔵 Terminal で次を実行します。
-
-```bash
-mkdir -p .kiro/settings
-open -e .kiro/settings/mcp.json
-```
-
-3. Windows と同じ JSON を手動で貼り付けて保存します。
-4. 既存 server がある場合は、既存設定を残して `drawio` エントリだけを追加します。
-
-### 3. 接続を確認する
-
-1. MCP Servers パネルで `drawio` を Restart または Refresh します。反映されない場合は Kiro IDE を一度終了して再起動します。
-2. 初回は `npx` が `@drawio/mcp@1.5.0` を取得するため、ネットワークによって少し時間がかかります。
-3. 状態が `Connected` になることを確認します。
-4. 次のツールが表示されることを確認します。
-
-- `open_drawio_mermaid`
-- `open_drawio_xml`
-- `open_drawio_csv`
-- `search_shapes`
-- `list_pages` / `get_page` / `set_page`
-
-5. 本演習では主に `open_drawio_mermaid` を使用します。
-6. 初回の MCP 権限要求では、server 名が `drawio`、tool 名が `open_drawio_mermaid` であることを確認し、workspace に限定した 1 回限りの `Allow` を選びます。
-
-`@drawio/mcp` は生成した図をブラウザー版 draw.io で開きます。**draw.io のブラウザー拡張機能は不要です。**
-
-### 4. Track A / Track B を判定する
-
-次をすべて満たす場合は Track A を使用します。
-
-- Node.js 18 以上、npm、npx が利用できる
-- MCP Servers パネルで `drawio` が `Connected`
-- `open_drawio_mermaid` が表示される
-- `https://app.diagrams.net/` をブラウザーで開ける
-
-次のいずれかなら Track B を使用します。
-
-- Node.js、npm、npx、npm registry、または外部ブラウザー利用が承認されていない
-- draw.io MCP が未接続、または `open_drawio_mermaid` が表示されない
-- 接続確認に 5 分以上かかる
-- 権限プロンプトを安全に承認できない
-
-Track B は Kiro に Mermaid または構造化図面仕様を作らせ、draw.io の `Arrange > Insert > Mermaid`、または手作業で再現します。
-
-> データ取扱い: `@drawio/mcp` は図を URL の `#fragment` に格納してブラウザー版 draw.io を開くため、図データ自体は draw.io サーバーへ送信されません。ただし、draw.io の Web アプリ資産は外部から読み込まれます。また図の生成内容は利用中の LLM に渡るため、本演習では合成データだけを使用します。
+> データ取扱い: hosted MCP server では、図データが MCP request として draw.io server へ送信されます。本演習では合成データだけを使用し、顧客情報、個人情報、認証情報、社内構成を含めません。ローカル `@drawio/mcp` Tool Server は図を URL fragment に格納するため、図データ自体は draw.io server へ送信されません。
 
 ## Agent Hooks の設定確認
 
