@@ -4,6 +4,47 @@
 
 `app.py` を現行仕様として、必要な Context だけでドキュメントのずれを直し、Steering と Hook で再発を防ぎます。
 
+## 題材のアプリを理解する
+
+この演習で使うのは、架空の求人情報を表示する小さなコマンドラインアプリです。求人情報は `data/jobs.json` に保存され、`app.py` がその内容を読み取って画面へ表示します。
+
+たとえば、募集中の求人だけを確認したい場合に `--status open` を指定します。
+
+```text
+利用者
+  │
+  │ python3 app.py --status open
+  ▼
+app.py（Job List CLI）
+  │
+  │ data/jobs.json を読み込む
+  ▼
+status が open の求人だけを表示
+```
+
+### 入力例
+
+Windows:
+
+```powershell
+py -3.12 app.py --status open
+```
+
+macOS / Linux:
+
+```bash
+python3 app.py --status open
+```
+
+### 出力例
+
+```text
+JOB-001    一般事務    東京    open
+JOB-003    ITサポート  大阪    open
+```
+
+このアプリのコードは正しく動きますが、要件、保存形式、CLI option を説明するドキュメントには古い記載が残っています。演習ではアプリのコードを変更せず、Kiro へ適切な根拠を渡してドキュメントを現行仕様へ合わせます。
+
 ## タイムテーブル
 
 | 内容 | 時間 |
