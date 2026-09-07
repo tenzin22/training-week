@@ -9,8 +9,10 @@ theme:
   language: ja
   font: false
   features:
-    - navigation.tabs
     - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.footer
     - navigation.top
     - content.code.copy
     - content.action.edit
@@ -20,10 +22,12 @@ theme:
       accent: light green
 
 nav:
-  - Home: index.md
-  - 事前準備: prerequisites.md
-  - 参加者ガイド: participant-guide.md
-  - draw.io 統合ラボ: drawio-lab.md
+  - はじめに:
+      - Home: index.md
+  - ハンズオン:
+      - 事前準備: prerequisites.md
+      - 参加者ガイド: participant-guide.md
+      - draw.io 統合ラボ: drawio-lab.md
 
 markdown_extensions:
   - tables
