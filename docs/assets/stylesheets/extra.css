@@ -1,0 +1,19 @@
+:root {
+  --md-text-font: "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+  --md-code-font: "Cascadia Code", "SFMono-Regular", "Consolas", "Noto Sans Mono CJK JP", monospace;
+}
+html { lang: ja; }
+body, input { font-family: var(--md-text-font); font-feature-settings: "palt" 1; }
+.md-header { background: #14213d; }
+.md-tabs { background: #1f3155; }
+.md-typeset h1, .md-typeset h2 { color: #14213d; font-weight: 700; }
+.md-typeset h2 { border-left: .28rem solid #78be20; padding-left: .65rem; }
+.md-typeset table:not([class]) { display: table; width: 100%; font-size: .78rem; }
+.md-typeset table:not([class]) th { background: #14213d; color: white; }
+.md-typeset table:not([class]) tr:nth-child(even) td { background: #f6f8fa; }
+.hero-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin: 1.4rem 0 2rem; }
+.md-typeset .grid.cards > ul > li { border-top: .22rem solid #78be20; }
+@media (max-width: 600px) {
+  .md-typeset table:not([class]) { display: block; overflow-x: auto; white-space: nowrap; }
+  .hero-actions .md-button { width: 100%; text-align: center; }
+}
