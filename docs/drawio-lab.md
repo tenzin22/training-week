@@ -109,3 +109,40 @@ python3 scripts/validate_docs.py
 ```
 
 `#Git Diff` で、図と Markdown 以外のコード変更がないこと、3要素・3フローが `app.py` と一致することを確認します。
+
+## 発展情報: Power で再利用する（本ハンズオンの対象外）
+
+!!! info "このハンズオンでは実施しません"
+    ここでは Power の考え方だけを紹介します。本ハンズオン中に Power のインストール、作成、設定、動作確認は行いません。興味がある方が、演習後に試すための参考情報です。
+
+### Power とは
+
+Power は、特定の技術を扱うためのツール、作業手順、ベストプラクティスを1つにまとめた、Kiro のインストール可能な拡張パッケージです。会話の内容が登録されたキーワードに一致すると、必要な Power が有効になり、関連する知識やツールが読み込まれます。
+
+| 機能 | 役割 |
+|---|---|
+| MCP | Kiro に draw.io を操作する機能を提供する |
+| Skill | 図を作る手順や確認方法を Kiro に伝える |
+| Power | MCP、Skill、関連する設定を1つにまとめて必要なときだけ有効にする |
+
+### draw.io Power にまとめられる内容
+
+今回の作業を実務で繰り返す場合は、次の内容を Power としてまとめられます。
+
+1. 根拠にするコードとドキュメントを確認する
+2. 推測したサービスを図へ追加しない
+3. Mermaid を生成する
+4. 公式 `@drawio/mcp` の `open_drawio_mermaid` を呼び出す
+5. `.drawio` ファイルの保存先を確認する
+6. Markdown に相対リンクを追加する
+7. コード、図、Git Diff の整合性を確認する
+
+Power を作る場合も、draw.io を操作する機能そのものは公式 `@drawio/mcp` を利用します。独自 MCP server を作り直す必要はありません。
+
+### 演習後に試したい場合
+
+- [Kiro Powers の概要](https://kiro.dev/docs/powers/)
+- [Power をインストールする](https://kiro.dev/docs/powers/installation/)
+- [Power を作成する](https://kiro.dev/docs/powers/create/)
+
+Kiro IDE の Powers 画面または Kiro Powers catalog から既存の Power を確認できます。インストール前に、含まれる Skill、MCP 設定、要求される権限を確認してください。
