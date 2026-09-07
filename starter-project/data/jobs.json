@@ -1,0 +1,22 @@
+{
+  "jobs": [
+    {
+      "job_id": "JOB-001",
+      "title": "一般事務",
+      "location": "東京",
+      "status": "open"
+    },
+    {
+      "job_id": "JOB-002",
+      "title": "カスタマーサポート",
+      "location": "名古屋",
+      "status": "closed"
+    },
+    {
+      "job_id": "JOB-003",
+      "title": "ITサポート",
+      "location": "大阪",
+      "status": "open"
+    }
+  ]
+}

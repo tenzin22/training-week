@@ -1,0 +1,6 @@
+[project]
+name = "synthetic-job-list"
+version = "0.1.0"
+description = "Small synthetic job-list CLI for a Kiro IDE workshop"
+requires-python = ">=3.12"
+dependencies = []

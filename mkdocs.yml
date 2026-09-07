@@ -1,0 +1,42 @@
+site_name: Kiro IDE 中級編ハンズオン
+site_description: 開発中のコードを正としてドキュメントを整備する Kiro IDE ハンズオン
+site_url: https://tenzin22.github.io/training-week/
+repo_url: https://github.com/tenzin22/training-week
+repo_name: tenzin22/training-week
+
+theme:
+  name: material
+  language: ja
+  font: false
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - scheme: default
+      primary: custom
+      accent: light green
+
+nav:
+  - Home: index.md
+  - 事前準備: prerequisites.md
+  - 参加者ガイド: participant-guide.md
+  - draw.io 統合ラボ: drawio-lab.md
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+exclude_docs: |
+  assets/downloads/.gitkeep
