@@ -47,17 +47,17 @@ JOB-003    ITサポート  大阪    open
 
 ## タイムテーブル
 
-| 内容 | 時間 |
-|---|---:|
-| 講義 | 25分 |
-| Starter Project | 5分 |
-| Context deep dive | 35分 |
-| Steering | 20分 |
-| Agent Hooks | 15分 |
-| 休憩 | 10分 |
-| draw.io | 20分 |
-| Checkpoints | 5分 |
-| Q&A・振り返り | 15分 |
+| 内容 |
+|---|
+| 講義 | 
+| Starter Project | 
+| Context deep dive |
+| Steering |
+| Agent Hooks |
+| 休憩 |
+| draw.io |
+| Checkpoints |
+| Q&A・振り返り |
 
 各章で「予測する -> 実行する -> 結果を見る -> 次回も効く仕組みにする」を繰り返します。
 
