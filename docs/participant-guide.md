@@ -390,22 +390,25 @@ inclusion: manual
 
 この演習では、客観的な3つの contract を検査する validator だけを Hook で自動実行します。
 
-## 4.2 validator Hook を作る
+## 4.2 validator Hook を設定する
 
-v1 Hook の action には2種類あります。この演習では終了コードで同じ判定を返せる **command 版を推奨**します。自然言語で Agent に確認を依頼する動きも比較したい場合は **agent 版**を選びます。**同時に2つは有効化しません。**
+この演習では **command Hook を1つだけ**設定します。`matcher` は使用しません。小さな演習 project では、すべての Agent 編集後に validator を実行する方が、正規表現のエスケープや Windows の path 区切りによる問題を避けられます。
 
-### A. command 版（推奨・決定論的）
+> `PostFileSave` は、Kiro Agent がファイルを作成・変更した後に発火します。人がエディタで `Ctrl+S` / `Cmd+S` を押しただけでは発火しません。
 
-Agent Hooks から v1 `PostFileSave` Hook を作成します。Windows 参加者は次を `.kiro/hooks/doc-validation.json` として保存します。
+### Windows
+
+1. `starter-project/.kiro/hooks/` フォルダーを作成する
+2. `validate-docs.json` を作成する
+3. 次の内容をファイル全体として保存する
 
 ```json
 {
   "version": "v1",
   "hooks": [
     {
-      "name": "validate-docs-after-markdown-save",
+      "name": "validate-docs",
       "trigger": "PostFileSave",
-      "matcher": "^docs/.*\\.md$",
       "action": {
         "type": "command",
         "command": "py -3.12 scripts/validate_docs.py"
@@ -415,66 +418,68 @@ Agent Hooks から v1 `PostFileSave` Hook を作成します。Windows 参加者
 }
 ```
 
-macOS / Linux では command だけを次へ置き換えます。
+### macOS / Linux
 
-```json
-"command": "python3 scripts/validate_docs.py"
-```
-
-### B. 自然言語 agent 版（比較用）
-
-自然言語版を使う場合は、command 版の代わりに次を `.kiro/hooks/doc-validation.json` として保存します。`agent` action は prompt を Agent の context へ追加します。終了コードで trigger を block する仕組みではないため、最終合否は validator output を人が確認します。
+1. `starter-project/.kiro/hooks/` フォルダーを作成する
+2. `validate-docs.json` を作成する
+3. 次の内容をファイル全体として保存する
 
 ```json
 {
   "version": "v1",
   "hooks": [
     {
-      "name": "ask-agent-to-validate-docs-after-markdown-save",
+      "name": "validate-docs",
       "trigger": "PostFileSave",
-      "matcher": "^docs/.*\\.md$",
       "action": {
-        "type": "agent",
-        "prompt": "docs/ 配下の Markdown が Kiro Agent により変更されました。Windows では `py -3.12 scripts/validate_docs.py`、macOS / Linux では `python3 scripts/validate_docs.py` を実行し、成功または失敗と不一致項目を報告してください。ファイルは変更しないでください。"
+        "type": "command",
+        "command": "python3 scripts/validate_docs.py"
       }
     }
   ]
 }
 ```
 
-確認項目:
-
-- `version`: `v1`
-- `trigger`: `PostFileSave`
-- `matcher`: `^docs/.*\\.md$`
-- command 版は `action.type`: `command` と OS に合う command
-- 自然言語版は `action.type`: `agent` と `action.prompt`
-- command 版と agent 版のどちらか一方だけが有効
-
-### Hook を読み込ませる（次へ進む前の必須確認）
-
-Hook JSON を Agent のファイル編集で作っただけでは、実行中の Kiro IDE がまだ新しい設定を読み込んでいない場合があります。
+### Hook の読み込みを確認する
 
 1. Kiro IDE の **Agent Hooks** パネル、または Command Palette の **Open Kiro Hook UI** を開く
-2. `validate-docs-after-markdown-save` または `ask-agent-to-validate-docs-after-markdown-save` が表示され、有効で、schema error がないことを確認する
-3. 表示されない場合は Hooks UI を Refresh / Reload する。Reload 項目がない、または反映されない場合は Kiro IDE を完全に終了して起動し直す
-4. Terminal で OS に合う command を1回実行し、Python と validator 自体が成功することを確認する
+2. `validate-docs` が表示され、有効で、schema error がないことを確認する
+3. 表示されない場合は Hooks UI を Refresh / Reload する
+4. それでも表示されない場合は Kiro IDE を完全に終了して起動し直す
+5. Terminal で validator を1回実行し、command 単体が成功することを確認する
 
 Windows:
 
 ```powershell
-py -3.12 --version
 py -3.12 scripts/validate_docs.py
 ```
 
 macOS / Linux:
 
 ```bash
-python3 --version
 python3 scripts/validate_docs.py
 ```
 
-Hook が UI に表示され、validator 単体が成功するまで 4.3 へ進みません。
+`Documentation validation passed.` が表示されてから次へ進みます。
+
+??? info "発展: 自然言語の agent action（本ハンズオンの対象外）"
+    `action.type` を `agent` にすると、command の代わりに自然言語 prompt を Agent へ渡せます。ただし、終了コードで検証結果を直接確認できる command Hook の方が、この演習には適しています。
+
+    ```json
+    {
+      "version": "v1",
+      "hooks": [
+        {
+          "name": "ask-agent-to-validate-docs",
+          "trigger": "PostFileSave",
+          "action": {
+            "type": "agent",
+            "prompt": "ドキュメント変更後に scripts/validate_docs.py を実行し、結果を報告してください。ファイルは変更しないでください。"
+          }
+        }
+      ]
+    }
+    ```
 
 ## 4.3 success -> failure -> recovery を観察する
 
