@@ -43,11 +43,14 @@ def validate() -> list[str]:
 def main() -> int:
     issues = validate()
     if issues:
-        print(f"Documentation validation found {len(issues)} known issue(s):")
+        print(
+            f"Documentation validation found {len(issues)} known issue(s):",
+            file=sys.stderr,
+        )
         for issue in issues:
-            print(f"- {issue}")
+            print(f"- {issue}", file=sys.stderr)
         return 1
-    print("Documentation validation passed.")
+    print("Documentation validation passed.", file=sys.stderr)
     return 0
 
 
