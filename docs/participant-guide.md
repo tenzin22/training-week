@@ -78,13 +78,20 @@ py -3.12 scripts/validate_docs.py
 py -3.12 app.py
 ```
 
-### macOS / Linux
+### macOS /
 
 ```bash
 python3 --version
 python3 -m unittest discover -s tests -v
 python3 scripts/validate_docs.py
 python3 app.py
+```
+
+### Linux
+
+```bash
+sudo apt update
+sudo apt install python3 python3-pip -y
 ```
 
 開始状態ではテスト3件が成功し、validator は次の3件を報告します。
