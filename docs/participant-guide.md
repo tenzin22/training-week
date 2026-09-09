@@ -390,55 +390,62 @@ inclusion: manual
 
 この演習では、客観的な3つの contract を検査する validator だけを Hook で自動実行します。
 
-## 4.2 validator Hook を設定する
+## 4.2 Kiro に validator Hook の作成を依頼する
 
-この演習では **command Hook を1つだけ**設定します。`matcher` は使用しません。小さな演習 project では、すべての Agent 編集後に validator を実行する方が、正規表現のエスケープや Windows の path 区切りによる問題を避けられます。
-
-> `PostFileSave` は、Kiro Agent がファイルを作成・変更した後に発火します。人がエディタで `Ctrl+S` / `Cmd+S` を押しただけでは発火しません。
+Kiro IDE の **Agent Hooks** で **+** を選び、**Ask Kiro to create a hook** を開きます。OS に合う prompt を Kiro Chat へ送ります。
 
 ### Windows
 
-1. `starter-project/.kiro/hooks/` フォルダーを作成する
-2. `validate-docs.json` を作成する
-3. 次の内容をファイル全体として保存する
+```text
+v1 Agent Hook を1つ作成してください。
 
-```json
-{
-  "version": "v1",
-  "hooks": [
-    {
-      "name": "validate-docs",
-      "trigger": "PostFileSave",
-      "action": {
-        "type": "command",
-        "command": "py -3.12 scripts/validate_docs.py"
-      }
-    }
-  ]
-}
+要件:
+- 保存先は `.kiro/hooks/validate-docs.json`
+- Hook 名は `validate-docs`
+- trigger は `PostFileSave`
+- action type は `command`
+- command は `py -3.12 scripts/validate_docs.py`
+- matcher は `^docs/.*\\.md$`
+- 他の Hook、Steering、アプリケーションコードは変更しない
+
+最初に作成予定の JSON 全体を表示してください。まだファイルには書き込まないでください。
 ```
 
 ### macOS / Linux
 
-1. `starter-project/.kiro/hooks/` フォルダーを作成する
-2. `validate-docs.json` を作成する
-3. 次の内容をファイル全体として保存する
+```text
+v1 Agent Hook を1つ作成してください。
 
-```json
-{
-  "version": "v1",
-  "hooks": [
-    {
-      "name": "validate-docs",
-      "trigger": "PostFileSave",
-      "action": {
-        "type": "command",
-        "command": "python3 scripts/validate_docs.py"
-      }
-    }
-  ]
-}
+要件:
+- 保存先は `.kiro/hooks/validate-docs.json`
+- Hook 名は `validate-docs`
+- trigger は `PostFileSave`
+- action type は `command`
+- command は `python3 scripts/validate_docs.py`
+- matcher は `^docs/.*\\.md$`
+- 他の Hook、Steering、アプリケーションコードは変更しない
+
+最初に作成予定の JSON 全体を表示してください。まだファイルには書き込まないでください。
 ```
+
+Kiro が表示した JSON で、次の項目を確認します。
+
+| 項目 | Windows | macOS / Linux |
+|---|---|---|
+| `version` | `v1` | `v1` |
+| `name` | `validate-docs` | `validate-docs` |
+| `trigger` | `PostFileSave` | `PostFileSave` |
+| `action.type` | `command` | `command` |
+| `action.command` | `py -3.12 scripts/validate_docs.py` | `python3 scripts/validate_docs.py` |
+| `matcher` | `^docs/.*\\.md$` | `^docs/.*\\.md$` |
+
+内容に問題がなければ、次を送ります。
+
+```text
+確認した JSON を `.kiro/hooks/validate-docs.json` に保存してください。他のファイルは変更しないでください。
+```
+
+Kiro の権限設定により `.kiro/hooks/` への書き込みが拒否された場合は、Kiro が表示した JSON を使って参加者が `validate-docs.json` を手動で作成します。権限を迂回するよう Kiro に依頼しません。
 
 ### Hook の読み込みを確認する
 
@@ -498,7 +505,7 @@ Hook の失敗確認で変更する1行:
 次を Kiro Chat へ送り、Hook の失敗を確認します。
 
 ```text
-Hook の失敗確認です。docs/architecture.md の `storage_format` の値だけを `json` から `csv` へ変更してください。変更するのはその1行だけです。data/jobs.json、app.py、tests、他の記述は変更せず、command も実行しないでください。
+Hook の動作確認です。docs/architecture.md の `storage_format` の値だけを `json` から `csv` へ変更してください。変更するのはその1行だけです。data/jobs.json、app.py、tests、他の記述は変更しないでください。
 ```
 
 Hook output または agent action が表示され、validator error が返ることを確認します。何も表示されない場合は Hook が発火したと見なしません。Terminal で validator を実行して誤変更を確認した後、4.2 の Hooks UI 読み込み確認へ戻ります。
