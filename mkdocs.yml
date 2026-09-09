@@ -28,6 +28,8 @@ nav:
       - 事前準備: prerequisites.md
       - 参加者ガイド: participant-guide.md
       - draw.io 統合ラボ: drawio-lab.md
+  - おすすめ:
+      - Context・Steering・MCP の使い分け: recommended-practices.md
 
 markdown_extensions:
   - tables
