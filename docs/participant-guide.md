@@ -405,7 +405,7 @@ v1 Agent Hook を1つ作成してください。
 - trigger は `PostFileSave`
 - action type は `command`
 - command は `py -3.12 scripts/validate_docs.py`
-- matcher は `^docs/.*\\.md$`
+- matcher は `docs[\\\\/].*\\.md$`
 - 他の Hook、Steering、アプリケーションコードは変更しない
 
 最初に作成予定の JSON 全体を表示してください。まだファイルには書き込まないでください。
@@ -422,7 +422,7 @@ v1 Agent Hook を1つ作成してください。
 - trigger は `PostFileSave`
 - action type は `command`
 - command は `python3 scripts/validate_docs.py`
-- matcher は `^docs/.*\\.md$`
+- matcher は `docs[\\\\/].*\\.md$`
 - 他の Hook、Steering、アプリケーションコードは変更しない
 
 最初に作成予定の JSON 全体を表示してください。まだファイルには書き込まないでください。
@@ -437,7 +437,7 @@ Kiro が表示した JSON で、次の項目を確認します。
 | `trigger` | `PostFileSave` | `PostFileSave` |
 | `action.type` | `command` | `command` |
 | `action.command` | `py -3.12 scripts/validate_docs.py` | `python3 scripts/validate_docs.py` |
-| `matcher` | `^docs/.*\\.md$` | `^docs/.*\\.md$` |
+| `matcher` | `docs[\\\\/].*\\.md$` | `docs[\\\\/].*\\.md$` |
 
 内容に問題がなければ、次を送ります。
 
@@ -467,7 +467,7 @@ macOS / Linux:
 python3 scripts/validate_docs.py
 ```
 
-`Documentation validation passed.` が表示されてから次へ進みます。
+`validate_docs.py` は成功・失敗のメッセージを標準エラー出力（stderr）へ書き出します。終了コードは、成功時が `0`、ドキュメントの不一致がある場合は `1` です。`Documentation validation passed.` が表示されてから次へ進みます。
 
 ??? info "発展: 自然言語の agent action（本ハンズオンの対象外）"
     `action.type` を `agent` にすると、command の代わりに自然言語 prompt を Agent へ渡せます。ただし、終了コードで検証結果を直接確認できる command Hook の方が、この演習には適しています。
