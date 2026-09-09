@@ -488,6 +488,44 @@ python3 scripts/validate_docs.py
     }
     ```
 
+??? info "発展: Agent の応答終了時に validator を確認して実行する（任意）"
+    `confirm` を使うと、command を実行する前に質問と選択肢を表示できます。公式 v1 schema では、`confirm` を利用できるのは `Stop` trigger の command Hook だけです。`PostFileSave` の validator Hook へは追加できません。
+
+    starter project では、Agent が応答を終えたときに validator を実行するか参加者へ確認する Hook として利用できます。Windows の例を `.kiro/hooks/confirm-final-validation.json` に保存する場合は次のようになります。
+
+    ```json
+    {
+      "version": "v1",
+      "hooks": [
+        {
+          "name": "Confirm final documentation validation",
+          "trigger": "Stop",
+          "action": {
+            "type": "command",
+            "command": "py -3.12 scripts/validate_docs.py"
+          },
+          "confirm": {
+            "question": "ドキュメント validator を実行しますか？",
+            "options": [
+              { "id": "validate", "label": "実行する", "run": true },
+              { "id": "skip", "label": "今回は実行しない", "run": false }
+            ]
+          }
+        }
+      ]
+    }
+    ```
+
+    macOS / Linux では command だけを次へ置き換えます。
+
+    ```json
+    "command": "python3 scripts/validate_docs.py"
+    ```
+
+    `実行する` を選ぶと validator が実行され、`今回は実行しない` を選ぶとその回は実行されません。`Stop` は session を閉じたときではなく、Agent が応答を終えたときに発火します。そのため、この確認は複数回表示される可能性があります。
+
+    本ハンズオンの中心は、ドキュメント変更時に自動実行する `PostFileSave` Hook です。この `Stop` Hook は、確認付き Hook の動きを試したい参加者向けの任意設定です。
+
 ## 4.3 success -> failure -> recovery を観察する
 
 Hook の失敗確認で変更する1行:
@@ -508,7 +546,7 @@ Hook の失敗確認で変更する1行:
 Hook の動作確認です。docs/architecture.md の `storage_format` の値だけを `json` から `csv` へ変更してください。変更するのはその1行だけです。data/jobs.json、app.py、tests、他の記述は変更しないでください。
 ```
 
-Hook output または agent action が表示され、validator error が返ることを確認します。何も表示されない場合は Hook が発火したと見なしません。Terminal で validator を実行して誤変更を確認した後、4.2 の Hooks UI 読み込み確認へ戻ります。
+`PostFileSave` Hook では `confirm` を使えないため、実行前の確認画面は表示されません。この演習では、Hook output に `Documentation validation found ...` または `Documentation validation passed.` が表示されることを、validator が実行された証拠として確認します。何も表示されない場合は Hook が発火したと見なしません。Terminal で validator を実行して誤変更を確認した後、4.2 の Hooks UI 読み込み確認へ戻ります。
 
 Windows:
 
