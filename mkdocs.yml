@@ -30,6 +30,7 @@ nav:
       - draw.io 統合ラボ: drawio-lab.md
   - おすすめ:
       - Context・Steering・MCP の使い分け: recommended-practices.md
+      - Custom Agent の考え方と使い方: custom-agents.md
 
 markdown_extensions:
   - tables
